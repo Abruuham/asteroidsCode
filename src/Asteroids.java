@@ -69,7 +69,7 @@ public class Asteroids
 		ast3width = 26;
 		try
 		{
-			background = ImageIO.read(new File("space.png"));
+			background = ImageIO.read(new File("back.jpg"));
 			player = ImageIO.read(new File("bitmap.png"));
 			flames1 = ImageIO.read(new File("flameleft.png"));
 			flames2 = ImageIO.read(new File("flamecenter.png"));
@@ -99,11 +99,11 @@ public class Asteroids
 		{
 			while(endgame == false)
 			{
-				//backgroundDraw();
+				backgroundDraw();
 				asteroidsDraw();
 				explosionsDraw();
-				//enemyBulletsDraw();
-				//enemyDraw();
+				enemyBulletsDraw();
+				enemyDraw();
 				playerBulletsDraw();
 				playerDraw();
 				flameDraw();
