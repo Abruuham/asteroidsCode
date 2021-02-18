@@ -1,3 +1,4 @@
+
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.Random;
@@ -5,6 +6,9 @@ import java.util.Random;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -48,9 +52,9 @@ public class Asteroids
 		pi = 3.14159265358979;
 		twoPi = 2.0 * 3.14159265358979;
 		endgame = false;
-		p1Width = 25; //18.5
-		p1Height = 47; //25
-		p1originalX = 45; // 0 + 488 - 12.5 = 475.5
+		p1Width = 50; //18.5
+		p1Height = 50; //25
+		p1originalX = 35; // 0 + 488 - 12.5 = 475.5
 		p1originalY = (double)YOFFSET + ((double)WINHEIGHT / 2.0) - (p1Height / 2.0);
 		playerBullets = new Vector<ImageObject> ();
 		playerBulletsTimes = new Vector<Long> ();
@@ -71,7 +75,7 @@ public class Asteroids
 		try
 		{
 			background = ImageIO.read(new File("racetrack.png"));
-			player = ImageIO.read(new File("car.png"));
+			player = ImageIO.read(new File("playerCar.png"));
 			flames1 = ImageIO.read(new File("flameleft.png"));
 			flames2 = ImageIO.read(new File("flamecenter.png"));
 			flames3 = ImageIO.read(new File("flameright.png"));
@@ -81,9 +85,9 @@ public class Asteroids
 			ast1 = ImageIO.read(new File("ast1.png"));
 			ast2 = ImageIO.read(new File("ast2.png"));
 			ast3 = ImageIO.read(new File("ast3.png"));
-			playerBullet = ImageIO.read(new File("playerBullet.png"));
-			enemyShip = ImageIO.read(new File("car.png"));
-			enemyBullet = ImageIO.read(new File("enemyBullet.png"));
+			playerBullet = ImageIO.read(new File("bullet.png"));
+			enemyShip = ImageIO.read(new File("playerCar.png"));
+			enemyBullet = ImageIO.read(new File("bullet.png"));
 			exp1 = ImageIO.read(new File("explosion1.png"));
 			exp2 = ImageIO.read(new File("explosion2.png"));
 
@@ -144,6 +148,7 @@ public class Asteroids
 
 		}
 	}
+
 
 	private static class PlayerMover implements Runnable
 	{
@@ -394,25 +399,25 @@ public class Asteroids
 
 
 				}
-				if(firePressed == true)
-				{
-					try
-					{
-						if(playerBullets.size() == 0)
-						{
-							insertPlayerBullet();
-						}
-						else if(System.currentTimeMillis() - playerBulletsTimes.elementAt(playerBulletsTimes.size() - 1) >
-								playerBulletLifetime / 4.0)
-						{
-							insertPlayerBullet();
-						}
-					}
-					catch(java.lang.ArrayIndexOutOfBoundsException aioobe)
-					{
-
-					}
-				}
+//				if(firePressed == true)
+//				{
+//					try
+//					{
+//						if(playerBullets.size() == 0)
+//						{
+//							insertPlayerBullet();
+//						}
+//						else if(System.currentTimeMillis() - playerBulletsTimes.elementAt(playerBulletsTimes.size() - 1) >
+//								playerBulletLifetime / 4.0)
+//						{
+//							insertPlayerBullet();
+//						}
+//					}
+//					catch(java.lang.ArrayIndexOutOfBoundsException aioobe)
+//					{
+//
+//					}
+//				}
 				enemy.move(-p2velocity * Math.cos(enemy.getAngle() - pi / 2.0), p2velocity * Math.sin(enemy.getAngle() - pi / 2.0));
 				enemy.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
 			}
@@ -659,7 +664,7 @@ public class Asteroids
 //			enemy = new ImageObject(XOFFSET + (double)(randomNumbers.nextInt(WINWIDTH)),
 //					YOFFSET + (double)(randomNumbers.nextInt(WINHEIGHT)), 29.0, 16.0,
 //					(double)(randomNumbers.nextInt(360)));
-			enemy = new ImageObject(85, p1originalY, p1Width, p1Height, 0.0);
+			enemy = new ImageObject(75, p1originalY, p1Width, p1Height, 0.0);
 		}
 		catch(java.lang.IllegalArgumentException jliae)
 		{
@@ -727,7 +732,7 @@ public class Asteroids
 	private static void playerBulletsDraw()
 	{
 		Graphics g = appFrame.getGraphics();
-		Graphics2D g2D = (Graphics2D)g;
+		Graphics2D g2D = (Graphics2D) g;
 		try
 		{
 			for(int i = 0;i < playerBullets.size(); i++)
@@ -747,7 +752,7 @@ public class Asteroids
 	{
 		Graphics g = appFrame.getGraphics();
 		Graphics2D g2D = (Graphics2D) g;
-		g2D.drawImage(rotateImageObject(p1).filter(player, null), (int)(p1.getX() + 0.5), (int)(p1.getY() + 0.5), null);
+		g2D.drawImage(rotateImageObject(p1).filter(player, null), (int)(p1.getX()), (int)(p1.getY()), null);
 	}
 
 	public static void flameDraw()
