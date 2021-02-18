@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ public class Asteroids
 		XOFFSET = 0;
 		YOFFSET = 40;
 		WINWIDTH = 976;
-		WINHEIGHT = 800;
+		WINHEIGHT = 790;
 		pi = 3.14159265358979;
 		twoPi = 2.0 * 3.14159265358979;
 		endgame = false;
@@ -81,7 +82,7 @@ public class Asteroids
 			ast2 = ImageIO.read(new File("ast2.png"));
 			ast3 = ImageIO.read(new File("ast3.png"));
 			playerBullet = ImageIO.read(new File("playerBullet.png"));
-			enemyShip = ImageIO.read(new File("enemy.png"));
+			enemyShip = ImageIO.read(new File("car.png"));
 			enemyBullet = ImageIO.read(new File("enemyBullet.png"));
 			exp1 = ImageIO.read(new File("explosion1.png"));
 			exp2 = ImageIO.read(new File("explosion2.png"));
@@ -100,13 +101,13 @@ public class Asteroids
 			while(endgame == false)
 			{
 				backgroundDraw();
-				asteroidsDraw();
+				//asteroidsDraw();
 				explosionsDraw();
-				enemyBulletsDraw();
+				//enemyBulletsDraw();
 				enemyDraw();//
 				playerBulletsDraw();
 				playerDraw();
-				flameDraw();
+				//flameDraw();
 				try
 				{
 					Thread.sleep(32);
@@ -185,7 +186,7 @@ public class Asteroids
 				}
 				if(rightPressed == true)
 				{
-					if(p1velocity < 0)
+					if(p1velocity < 0 || collisionOccurs(p1, enemy))
 					{
 						p1.rotate(rotatestep);
 					}
@@ -193,6 +194,9 @@ public class Asteroids
 					{
 						p1.rotate(-rotatestep);
 					}
+
+
+
 				}
 				if(firePressed == true)
 				{
@@ -371,11 +375,11 @@ public class Asteroids
 					{
 						if(enemyBullets.size() == 0)
 						{
-							insertEnemyBullet();
+							//insertEnemyBullet();
 						}
 						else if(System.currentTimeMillis() - enemyBulletsTimes.elementAt(enemyBulletsTimes.size() - 1) > enemyBulletLifetime / 4.0)
 						{
-							insertEnemyBullet();
+							//insertEnemyBullet();
 						}
 					}
 				}
@@ -439,58 +443,58 @@ public class Asteroids
 			{
 				try
 				{
-					for(int i = 0; i < asteroids.size(); i++)
-					{
-						for(int j = 0; j < playerBullets.size(); j++)
-						{
-							if(collisionOccurs(asteroids.elementAt(i), playerBullets.elementAt(j)) == true)
-							{
-								double posX = asteroids.elementAt(i).getX();
-								double posY = asteroids.elementAt(i).getY();
+//					for(int i = 0; i < asteroids.size(); i++)
+//					{
+//						for(int j = 0; j < playerBullets.size(); j++)
+//						{
+//							if(collisionOccurs(asteroids.elementAt(i), playerBullets.elementAt(j)) == true)
+//							{
+//								double posX = asteroids.elementAt(i).getX();
+//								double posY = asteroids.elementAt(i).getY();
+//
+//								explosions.addElement(new ImageObject(posX, posY, 27, 24, 0.0));
+//								explosionsTimes.addElement(System.currentTimeMillis());
+//
+//								if(asteroidsTypes.elementAt(i) == 1)
+//								{
+//									asteroids.addElement(new ImageObject(posX, posY, ast2width, ast2width, (double)(randomNumbers.nextInt(360))));
+//									asteroidsTypes.addElement(2);
+//									asteroids.remove(i);
+//									asteroidsTypes.remove(i);
+//									playerBullets.remove(j);
+//									playerBulletsTimes.remove(j);
+//								}
+//
+//								if(asteroidsTypes.elementAt(i) == 2)
+//								{
+//									asteroids.addElement(new ImageObject(posX, posY, ast3width, ast3width,
+//											(double)(randomNumbers.nextInt(360))));
+//									asteroidsTypes.addElement(3);
+//									asteroids.remove(i);
+//									asteroidsTypes.remove(i);
+//									playerBullets.remove(j);
+//									playerBulletsTimes.remove(j);
+//
+//								}
+//								if(asteroidsTypes.elementAt(i) == 3)
+//								{
+//									asteroids.remove(i);
+//									asteroidsTypes.remove(i);
+//									playerBullets.remove(j);
+//									playerBulletsTimes.remove(j);
+//								}
+//							}
+//						}
+//					}
 
-								explosions.addElement(new ImageObject(posX, posY, 27, 24, 0.0));
-								explosionsTimes.addElement(System.currentTimeMillis());
-
-								if(asteroidsTypes.elementAt(i) == 1)
-								{
-									asteroids.addElement(new ImageObject(posX, posY, ast2width, ast2width, (double)(randomNumbers.nextInt(360))));
-									asteroidsTypes.addElement(2);
-									asteroids.remove(i);
-									asteroidsTypes.remove(i);
-									playerBullets.remove(j);
-									playerBulletsTimes.remove(j);
-								}
-
-								if(asteroidsTypes.elementAt(i) == 2)
-								{
-									asteroids.addElement(new ImageObject(posX, posY, ast3width, ast3width,
-											(double)(randomNumbers.nextInt(360))));
-									asteroidsTypes.addElement(3);
-									asteroids.remove(i);
-									asteroidsTypes.remove(i);
-									playerBullets.remove(j);
-									playerBulletsTimes.remove(j);
-
-								}
-								if(asteroidsTypes.elementAt(i) == 3)
-								{
-									asteroids.remove(i);
-									asteroidsTypes.remove(i);
-									playerBullets.remove(j);
-									playerBulletsTimes.remove(j);
-								}
-							}
-						}
-					}
-
-					for(int i = 0; i < asteroids.size(); i++)
-					{
-						if(collisionOccurs(asteroids.elementAt(i), p1) == true)
-						{
-							endgame = true;
-							System.out.println("Game Over You Lose 2!");
-						}
-					}
+//					for(int i = 0; i < asteroids.size(); i++)
+//					{
+//						if(collisionOccurs(asteroids.elementAt(i), p1) == true)
+//						{
+//							endgame = true;
+//							System.out.println("Game Over You Lose 2!");
+//						}
+//					}
 
 					try
 					{
@@ -515,14 +519,16 @@ public class Asteroids
 //
 						if(collisionOccurs(enemy, p1) == true)
 						{
-							endgame = true;
-							System.out.println("Game Over You Lose 3");
+							//endgame = true;
+							System.out.println("Collision with enemy ");
 						}
 						for(int i = 0; i < enemyBullets.size(); i++)
 						{
+
 							if(collisionOccurs(enemyBullets.elementAt(i), p1) == true)
 							{
-								System.out.println("Collision with enemy");
+
+								System.out.println("Collision with enemy bullet");
 								endgame = true;
 								System.out.println("Game Over You Lose 4");
 							}
@@ -544,13 +550,13 @@ public class Asteroids
 	private static class WinChecker implements Runnable
 	{
 		public void run(){
-			while(endgame == false){
-				if(asteroids.size() == 0)
-				{
-					endgame = true;
-					System.out.println("Game Over You Win");
-				}
-			}
+//			while(endgame == false){
+//				if(asteroids.size() == 0)
+//				{
+//					endgame = true;
+//					System.out.println("Game Over You Win");
+//				}
+//			}
 		}
 	}
 
@@ -809,7 +815,6 @@ public class Asteroids
 			if(action.equals("UP"))
 			{
 				upPressed = true;
-				System.out.println("here");
 			}
 			if(action.equals("DOWN"))
 			{
@@ -908,24 +913,24 @@ public class Asteroids
 			enemyBulletsTimes = new Vector<Long>();
 			explosions = new Vector<ImageObject>();
 			explosionsTimes = new Vector<Long>();
-			generateAsteroids();
+			//generateAsteroids();
 			endgame = false;
 			Thread t1 = new Thread(new Animate());
 			Thread t2 = new Thread(new PlayerMover());
-			Thread t3 = new Thread(new FlameMover());
-			Thread t4 = new Thread(new AsteroidsMover());
+			//Thread t3 = new Thread(new FlameMover());
+			//Thread t4 = new Thread(new AsteroidsMover());
 			Thread t5 = new Thread(new PlayerBulletsMover());
 			Thread t6 = new Thread(new EnemyShipMover());
-			Thread t7 = new Thread(new EnemyBulletsMover());
+			//Thread t7 = new Thread(new EnemyBulletsMover());
 			Thread t8 = new Thread(new CollisionChecker());
 			Thread t9 = new Thread(new WinChecker());
 			t1.start();
 			t2.start();
-			t3.start();
-			t4.start();
+			//t3.start();
+			//t4.start();
 			t5.start();
 			t6.start();
-			t7.start();
+			//t7.start();
 			t8.start();
 			t9.start();
 		}
