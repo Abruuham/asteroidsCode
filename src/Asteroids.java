@@ -42,13 +42,13 @@ public class Asteroids
 		appFrame = new JFrame("Asteroids");
 		XOFFSET = 0;
 		YOFFSET = 40;
-		WINWIDTH = 500;
-		WINHEIGHT = 500;
+		WINWIDTH = 976;
+		WINHEIGHT = 800;
 		pi = 3.14159265358979;
 		twoPi = 2.0 * 3.14159265358979;
 		endgame = false;
 		p1Width = 25; //18.5
-		p1Height = 25; //25
+		p1Height = 47; //25
 		p1originalX = (double)XOFFSET + ((double)WINWIDTH / 2.0) - (p1Width / 2.0);
 		p1originalY = (double)YOFFSET + ((double)WINHEIGHT / 2.0) - (p1Height / 2.0);
 		playerBullets = new Vector<ImageObject> ();
@@ -61,7 +61,7 @@ public class Asteroids
 		flameCount = 1;
 		flameWidth = 12.0;
 		expcount = 1;
-		level = 3;
+		level = 1;
 		asteroids = new Vector<ImageObject> ();
 		asteroidsTypes = new Vector<Integer> ();
 		ast1width = 32;
@@ -69,8 +69,8 @@ public class Asteroids
 		ast3width = 26;
 		try
 		{
-			background = ImageIO.read(new File("back.jpg"));
-			player = ImageIO.read(new File("bitmap.png"));
+			background = ImageIO.read(new File("racetrack.png"));
+			player = ImageIO.read(new File("car.png"));
 			flames1 = ImageIO.read(new File("flameleft.png"));
 			flames2 = ImageIO.read(new File("flamecenter.png"));
 			flames3 = ImageIO.read(new File("flameright.png"));
@@ -103,7 +103,7 @@ public class Asteroids
 				asteroidsDraw();
 				explosionsDraw();
 				enemyBulletsDraw();
-				enemyDraw();
+				enemyDraw();//
 				playerBulletsDraw();
 				playerDraw();
 				flameDraw();
@@ -522,6 +522,7 @@ public class Asteroids
 						{
 							if(collisionOccurs(enemyBullets.elementAt(i), p1) == true)
 							{
+								System.out.println("Collision with enemy");
 								endgame = true;
 								System.out.println("Game Over You Lose 4");
 							}
@@ -1260,7 +1261,7 @@ public class Asteroids
 		myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("pressed " + input), input + " pressed");
 		myPanel.getActionMap().put(input + " pressed" , new KeyPressed(input));
 		myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("released " + input), input + " released");
-		myPanel.getActionMap().put(input + " released" , new KeyPressed(input));
+		myPanel.getActionMap().put(input + " released" , new KeyReleased(input));
 
 	}
 
@@ -1268,15 +1269,15 @@ public class Asteroids
 	{
 		setup();
 		appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		appFrame.setSize(501, 585);
+		appFrame.setSize(976, 800);
 
 		JPanel myPanel = new JPanel();
 
-		String[] levels = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"};
-		JComboBox<String> levelMenu = new JComboBox<String>(levels);
-		levelMenu.setSelectedIndex(2);
-		levelMenu.addActionListener(new GameLevel());
-		myPanel.add(levelMenu);
+//		String[] levels = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"};
+//		JComboBox<String> levelMenu = new JComboBox<String>(levels);
+//		levelMenu.setSelectedIndex(0);
+//		levelMenu.addActionListener(new GameLevel());
+//		myPanel.add(levelMenu);
 
 		JButton newGameButton = new JButton("New Game");
 		newGameButton.addActionListener(new StartGame());
