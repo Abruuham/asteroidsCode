@@ -44,7 +44,7 @@ public class Asteroids
 		XOFFSET = 0;
 		YOFFSET = 40;
 		WINWIDTH = 976;
-		WINHEIGHT = 790;
+		WINHEIGHT = 800;
 		pi = 3.14159265358979;
 		twoPi = 2.0 * 3.14159265358979;
 		endgame = false;
@@ -151,9 +151,6 @@ public class Asteroids
 		{
 			velocitystep = 0.01;
 			rotatestep = 0.01;
-
-			p2Velocity = 0.01;
-			p2rotateStep = 0.01;
 		}
 
 		public void run()
@@ -348,11 +345,13 @@ public class Asteroids
 	{
 		public EnemyShipMover()
 		{
-			velocity = 1.0;
+			velocitystep = 0.01;
+			p2rotateStep = 0.01;
 		}
+
 		public void run()
 		{
-			while(endgame == false && enemyAlive == true)
+			while(endgame == false)
 			{
 				try
 				{
@@ -362,37 +361,112 @@ public class Asteroids
 				{
 
 				}
-				try
+				if(wPressed == true)
 				{
-					enemy.move(-velocity * Math.cos(enemy.getAngle() - pi / 2.0),
-							velocity * Math.sin(enemy.getAngle() - pi / 2.0));
-					enemy.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
+					p2velocity = p2velocity + velocitystep;
 				}
-				catch(java.lang.NullPointerException jlnpe)
+				if(sPressed == true)
 				{
-
+					p2velocity = p2velocity - velocitystep;
 				}
-				try
+				if(aPressed == true)
 				{
-					if(enemyAlive == true)
+					if(p2velocity < 0)
 					{
-						if(enemyBullets.size() == 0)
-						{
-							//insertEnemyBullet();
-						}
-						else if(System.currentTimeMillis() - enemyBulletsTimes.elementAt(enemyBulletsTimes.size() - 1) > enemyBulletLifetime / 4.0)
-						{
-							//insertEnemyBullet();
-						}
+						enemy.rotate(-p2rotateStep);
+					}
+					else
+					{
+						enemy.rotate(p2rotateStep);
 					}
 				}
-				catch(java.lang.ArrayIndexOutOfBoundsException aioobe)
+				if(dPressed == true)
 				{
+					if(p2velocity < 0 || collisionOccurs(enemy, p1))
+					{
+						enemy.rotate(p2rotateStep);
+					}
+					else
+					{
+						enemy.rotate(-p2rotateStep);
+					}
+
+
 
 				}
+				if(firePressed == true)
+				{
+					try
+					{
+						if(playerBullets.size() == 0)
+						{
+							insertPlayerBullet();
+						}
+						else if(System.currentTimeMillis() - playerBulletsTimes.elementAt(playerBulletsTimes.size() - 1) >
+								playerBulletLifetime / 4.0)
+						{
+							insertPlayerBullet();
+						}
+					}
+					catch(java.lang.ArrayIndexOutOfBoundsException aioobe)
+					{
+
+					}
+				}
+				enemy.move(-p2velocity * Math.cos(enemy.getAngle() - pi / 2.0), p2velocity * Math.sin(enemy.getAngle() - pi / 2.0));
+				enemy.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
 			}
 		}
-		private double velocity;
+		private double velocitystep;
+		private double p2rotateStep;
+		private double p2velocity;
+//		public EnemyShipMover()
+//		{
+//			velocity = 1.0;
+//		}
+//		public void run()
+//		{
+//			while(endgame == false )//&& enemyAlive == true)
+//			{
+//				try
+//				{
+//					Thread.sleep(10);
+//				}
+//				catch(InterruptedException e)
+//				{
+//
+//				}
+//				try
+//				{
+//					enemy.move(-velocity * Math.cos(enemy.getAngle() - pi / 2.0),
+//							velocity * Math.sin(enemy.getAngle() - pi / 2.0));
+//					enemy.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
+//				}
+//				catch(java.lang.NullPointerException jlnpe)
+//				{
+//
+//				}
+//				try
+//				{
+//					if(enemyAlive == true)
+//					{
+//						if(enemyBullets.size() == 0)
+//						{
+//							//insertEnemyBullet();
+//						}
+//						else if(System.currentTimeMillis() - enemyBulletsTimes.elementAt(enemyBulletsTimes.size() - 1) > enemyBulletLifetime / 4.0)
+//						{
+//							//insertEnemyBullet();
+//						}
+//					}
+//				}
+//				catch(java.lang.ArrayIndexOutOfBoundsException aioobe)
+//				{
+//
+//				}
+//			}
+//		}
+//		private double velocity;
 	}
 
 	private static class EnemyBulletsMover implements Runnable
@@ -645,20 +719,9 @@ public class Asteroids
 	}
 
 	public static void enemyDraw()
-	{
-		if(enemyAlive == true)
-		{
-			try
-			{
-				Graphics g = appFrame.getGraphics();
-				Graphics2D g2D = (Graphics2D)g;
-				g2D.drawImage(enemyShip, (int)(enemy.getX() + 0.5), (int)(enemy.getY() + 0.5), null);
-			}
-			catch(java.lang.NullPointerException jlnpe)
-			{
-
-			}
-		}
+	{	Graphics g = appFrame.getGraphics();
+		Graphics2D g2D = (Graphics2D) g;
+		g2D.drawImage(rotateImageObject(enemy).filter(enemyShip, null), (int)(enemy.getX() + 0.5), (int)(enemy.getY() + 0.5), null);
 	}
 
 	private static void playerBulletsDraw()
@@ -836,6 +899,18 @@ public class Asteroids
 			{
 				firePressed = true;
 			}
+			if(action.equals("W")){
+				wPressed = true;
+			}
+			if(action.equals("A")){
+				aPressed = true;
+			}
+			if(action.equals("S")){
+				sPressed = true;
+			}
+			if(action.equals("D")){
+				dPressed = true;
+			}
 		}
 		private String action;
 	}
@@ -873,6 +948,18 @@ public class Asteroids
 			{
 				firePressed = false;
 			}
+			if(action.equals("W")){
+				wPressed = false;
+			}
+			if(action.equals("A")){
+				aPressed = false;
+			}
+			if(action.equals("S")){
+				sPressed = false;
+			}
+			if(action.equals("D")){
+				dPressed = false;
+			}
 		}
 		private String action;
 
@@ -899,10 +986,11 @@ public class Asteroids
 			firePressed = false;
 			aPressed = false;
 			sPressed = false;
-			dPressed = true;
+			dPressed = false;
 			wPressed = false;
 			p1 = new ImageObject(p1originalX, p1originalY, p1Width, p1Height, 0.0);
 			p1velocity = 0.0;
+			p2Velocity = 0.0;
 			generateEnemy();
 			flames = new ImageObject(p1originalX + p1Width / 2.0, p1originalY + p1Height, flameWidth, flameWidth, 0.0);
 			flameCount = 1;
@@ -1282,7 +1370,7 @@ public class Asteroids
 	{
 		setup();
 		appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		appFrame.setSize(976, 800);
+		appFrame.setSize(976, 790);
 
 		JPanel myPanel = new JPanel();
 
@@ -1305,6 +1393,11 @@ public class Asteroids
 		bindKey(myPanel, "LEFT");
 		bindKey(myPanel, "RIGHT");
 		bindKey(myPanel, "F");
+		bindKey(myPanel, "W");
+		bindKey(myPanel, "A");
+		bindKey(myPanel, "S");
+		bindKey(myPanel, "D");
+
 
 		appFrame.getContentPane().add(myPanel, "South");
 		appFrame.setVisible(true);
