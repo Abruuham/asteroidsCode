@@ -50,7 +50,7 @@ public class Asteroids
 		endgame = false;
 		p1Width = 25; //18.5
 		p1Height = 47; //25
-		p1originalX = (double)XOFFSET + ((double)WINWIDTH / 2.0) - (p1Width / 2.0);
+		p1originalX = 45; // 0 + 488 - 12.5 = 475.5
 		p1originalY = (double)YOFFSET + ((double)WINHEIGHT / 2.0) - (p1Height / 2.0);
 		playerBullets = new Vector<ImageObject> ();
 		playerBulletsTimes = new Vector<Long> ();
@@ -151,6 +151,9 @@ public class Asteroids
 		{
 			velocitystep = 0.01;
 			rotatestep = 0.01;
+
+			p2Velocity = 0.01;
+			p2rotateStep = 0.01;
 		}
 
 		public void run()
@@ -578,10 +581,11 @@ public class Asteroids
 	{
 		try
 		{
-			Random randomNumbers = new Random(LocalTime.now().getNano());
-			enemy = new ImageObject(XOFFSET + (double)(randomNumbers.nextInt(WINWIDTH)),
-					YOFFSET + (double)(randomNumbers.nextInt(WINHEIGHT)), 29.0, 16.0,
-					(double)(randomNumbers.nextInt(360)));
+//			Random randomNumbers = new Random(LocalTime.now().getNano());
+//			enemy = new ImageObject(XOFFSET + (double)(randomNumbers.nextInt(WINWIDTH)),
+//					YOFFSET + (double)(randomNumbers.nextInt(WINHEIGHT)), 29.0, 16.0,
+//					(double)(randomNumbers.nextInt(360)));
+			enemy = new ImageObject(85, p1originalY, p1Width, p1Height, 0.0);
 		}
 		catch(java.lang.IllegalArgumentException jliae)
 		{
@@ -893,6 +897,10 @@ public class Asteroids
 			leftPressed = false;
 			rightPressed = false;
 			firePressed = false;
+			aPressed = false;
+			sPressed = false;
+			dPressed = true;
+			wPressed = false;
 			p1 = new ImageObject(p1originalX, p1originalY, p1Width, p1Height, 0.0);
 			p1velocity = 0.0;
 			generateEnemy();
@@ -1313,6 +1321,11 @@ public class Asteroids
 	private static Boolean leftPressed;
 	private static Boolean rightPressed;
 	private static Boolean firePressed;
+	private static Boolean aPressed;
+	private static Boolean sPressed;
+	private static Boolean dPressed;
+	private static Boolean wPressed;
+
 
 	private static ImageObject p1;
 	private static double p1Width;
@@ -1320,6 +1333,8 @@ public class Asteroids
 	private static double p1originalX;
 	private static double p1originalY;
 	private static double p1velocity;
+	private static double p2Velocity;
+	private static double p2rotateStep;
 
 	private static ImageObject enemy;
 	private static BufferedImage enemyShip;
