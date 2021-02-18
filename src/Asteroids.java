@@ -1,4 +1,4 @@
-
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.Random;
@@ -6,9 +6,8 @@ import java.util.Random;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.print.attribute.standard.Media;
+import javax.sound.sampled.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -1006,6 +1005,15 @@ public class Asteroids
 			{
 
 			}
+			try {
+				playSound("music.wav");
+			} catch (LineUnavailableException lineUnavailableException) {
+				lineUnavailableException.printStackTrace();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			} catch (UnsupportedAudioFileException unsupportedAudioFileException) {
+				unsupportedAudioFileException.printStackTrace();
+			}
 			playerBullets = new Vector<ImageObject>();
 			playerBulletsTimes = new Vector<Long>();
 			enemyBullets = new Vector<ImageObject>();
@@ -1033,6 +1041,17 @@ public class Asteroids
 			t8.start();
 			t9.start();
 		}
+	}
+
+	private static void playSound(String soundFile) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+		File f = new File(soundFile);
+		AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+		Clip clip = AudioSystem.getClip();
+		clip.open(audioIn);
+		FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		volume.setValue(-1 * 20);
+		clip.start();
+
 	}
 
 	private static class GameLevel implements ActionListener
