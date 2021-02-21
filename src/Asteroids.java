@@ -73,7 +73,7 @@ public class Asteroids
 		ast3width = 26;
 		try
 		{
-			background = ImageIO.read(new File("racetrack.png"));
+			background = ImageIO.read(new File("track.png"));
 			player = ImageIO.read(new File("playerCar.png"));
 			flames1 = ImageIO.read(new File("flameleft.png"));
 			flames2 = ImageIO.read(new File("flamecenter.png"));
@@ -1049,7 +1049,7 @@ public class Asteroids
 		Clip clip = AudioSystem.getClip();
 		clip.open(audioIn);
 		FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-		volume.setValue(-1 * 20);
+		volume.setValue(-1 * 25);
 		clip.start();
 
 	}
