@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Vector;
@@ -8,13 +9,7 @@ import java.time.temporal.ChronoUnit;
 
 import javax.print.attribute.standard.Media;
 import javax.sound.sampled.*;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.KeyStroke;
-import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.*;
 
 import javax.imageio.ImageIO;
 
@@ -28,11 +23,10 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+
+
 
 public class Asteroids
 {
@@ -40,8 +34,10 @@ public class Asteroids
 		setup();
 	}
 
+
 	public static void setup()
 	{
+
 
 		appFrame = new JFrame("Asteroids");
 		XOFFSET = 0;
@@ -51,10 +47,10 @@ public class Asteroids
 		pi = 3.14159265358979;
 		twoPi = 2.0 * 3.14159265358979;
 		endgame = false;
-		p1Width = 50; //18.5
-		p1Height = 50; //25
-		p1originalX = 35; // 0 + 488 - 12.5 = 475.5
-		p1originalY = (double)YOFFSET + ((double)WINHEIGHT / 2.0) - (p1Height / 2.0);
+		p1Width = 25; //18.5
+		p1Height = 25; //25
+		p1originalX = 46; // 0 + 488 - 12.5 = 475.5
+		p1originalY = (double)YOFFSET + ((double)WINHEIGHT / 2.0) - (p1Height / 2.0) + 100;
 		playerBullets = new Vector<ImageObject> ();
 		playerBulletsTimes = new Vector<Long> ();
 		bulletWidth = 15;
@@ -74,7 +70,7 @@ public class Asteroids
 		try
 		{
 			background = ImageIO.read(new File("track.png"));
-			player = ImageIO.read(new File("playerCar.png"));
+			player = ImageIO.read(new File("mcqueen.png"));
 			flames1 = ImageIO.read(new File("flameleft.png"));
 			flames2 = ImageIO.read(new File("flamecenter.png"));
 			flames3 = ImageIO.read(new File("flameright.png"));
@@ -85,7 +81,7 @@ public class Asteroids
 			ast2 = ImageIO.read(new File("ast2.png"));
 			ast3 = ImageIO.read(new File("ast3.png"));
 			playerBullet = ImageIO.read(new File("bullet.png"));
-			enemyShip = ImageIO.read(new File("playerCar.png"));
+			enemyShip = ImageIO.read(new File("mater.png"));
 			enemyBullet = ImageIO.read(new File("bullet.png"));
 			exp1 = ImageIO.read(new File("explosion1.png"));
 			exp2 = ImageIO.read(new File("explosion2.png"));
@@ -96,6 +92,18 @@ public class Asteroids
 			System.out.println("caught" + ioe);
 		}
 	}
+
+
+	private static void checkMoversAgainstWalls(Vector<ImageObject> wallsInput){
+		for(int i = 0; i < wallsInput.size(); i++){
+			if(collisionOccurs(p1, wallsInput.elementAt(i))){
+				p1.setBounce(true);
+			}
+		}
+	}
+
+
+
 
 	private static class Animate implements Runnable
 	{
@@ -160,39 +168,57 @@ public class Asteroids
 				{
 
 				}
-				if(upPressed == true)
-				{
-					p1velocity = p1velocity + velocitystep;
-				}
-				if(downPressed == true)
-				{
-					p1velocity = p1velocity - velocitystep;
-				}
-				if(leftPressed == true)
-				{
-					if(p1velocity < 0)
-					{
-						p1.rotate(-rotatestep);
-					}
-					else
-					{
-						p1.rotate(rotatestep);
-					}
-				}
-				if(rightPressed == true)
-				{
-					if(p1velocity < 0 || collisionOccurs(p1, enemy))
-					{
-						p1.rotate(rotatestep);
-					}
-					else
-					{
-						p1.rotate(-rotatestep);
-					}
 
 
+				//System.out.println(p1.getY());
+				if(p1.getX() <= 2 || p1.getX() >= 680 || p1.getY() <= 45 || p1.getY() >= 700){
+					p1velocity = 0;
+					if (upPressed == true) {
+						p1velocity = p1velocity + velocitystep;
+					}
+					if (downPressed == true) {
+						p1velocity = p1velocity - velocitystep;
+					}
+					if (leftPressed == true) {
+						if (p1velocity < 0) {
+							p1.rotate(-rotatestep);
+						} else {
+							p1.rotate(rotatestep);
+						}
+					}
+					if (rightPressed == true) {
+						if (p1velocity < 0 || collisionOccurs(p1, enemy)) {
+							p1.rotate(rotatestep);
+						} else {
+							p1.rotate(-rotatestep);
+						}
+
+					}
 
 				}
+
+					if (upPressed == true) {
+						p1velocity = p1velocity + velocitystep;
+					}
+					if (downPressed == true) {
+						p1velocity = p1velocity - velocitystep;
+					}
+					if (leftPressed == true) {
+						if (p1velocity < 0) {
+							p1.rotate(-rotatestep);
+						} else {
+							p1.rotate(rotatestep);
+						}
+					}
+					if (rightPressed == true) {
+						if (p1velocity < 0 || collisionOccurs(p1, enemy)) {
+							p1.rotate(rotatestep);
+						} else {
+							p1.rotate(-rotatestep);
+						}
+
+					}
+
 				if(firePressed == true)
 				{
 					try
@@ -212,6 +238,8 @@ public class Asteroids
 
 					}
 				}
+
+
 				p1.move(-p1velocity * Math.cos(p1.getAngle() - pi / 2.0), p1velocity * Math.sin(p1.getAngle() - pi / 2.0));
 				p1.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
 			}
@@ -377,7 +405,7 @@ public class Asteroids
 				}
 				if(dPressed == true)
 				{
-					if(p2velocity < 0 || collisionOccurs(enemy, p1))
+					if(p2velocity < 0)
 					{
 						enemy.rotate(p2rotateStep);
 					}
@@ -408,6 +436,8 @@ public class Asteroids
 
 					}
 				}
+
+
 				enemy.move(-p2velocity * Math.cos(enemy.getAngle() - pi / 2.0), p2velocity * Math.sin(enemy.getAngle() - pi / 2.0));
 				enemy.screenWrap(XOFFSET, XOFFSET + WINWIDTH, YOFFSET, YOFFSET + WINHEIGHT);
 			}
@@ -594,6 +624,10 @@ public class Asteroids
 							//endgame = true;
 							//System.out.println("Collision with enemy ");
 						}
+
+//						if(p1.getX() < 2 ){
+//							p1.rotate(-p1.getAngle());
+//						}
 						for(int i = 0; i < enemyBullets.size(); i++)
 						{
 
@@ -654,7 +688,7 @@ public class Asteroids
 //			enemy = new ImageObject(XOFFSET + (double)(randomNumbers.nextInt(WINWIDTH)),
 //					YOFFSET + (double)(randomNumbers.nextInt(WINHEIGHT)), 29.0, 16.0,
 //					(double)(randomNumbers.nextInt(360)));
-			enemy = new ImageObject(75, p1originalY, p1Width, p1Height, 0.0);
+			enemy = new ImageObject(66, p1originalY, p1Width, p1Height, 0.0);
 		}
 		catch(java.lang.IllegalArgumentException jliae)
 		{
@@ -1054,6 +1088,7 @@ public class Asteroids
 
 	}
 
+
 	private static class GameLevel implements ActionListener
 	{
 		public int decodeLevel(String input)
@@ -1194,15 +1229,18 @@ public class Asteroids
 	{
 		public ImageObject()
 		{
-
+			bounce = false;
 		}
 
 		public ImageObject(double xinput, double yinput, double xwidthinput, double yheightinput, double angleinput)
 		{
+			this();
 			x = xinput;
 			y = yinput;
 			xwidth = xwidthinput;
 			yheight = yheightinput;
+			lastposx = x;
+			lastposy = y;
 			angle = angleinput;
 			internalangle = 0.0;
 			coords = new Vector<Double>();
@@ -1319,6 +1357,40 @@ public class Asteroids
 			y = yinput;
 		}
 
+		public Boolean getBounce(){
+			return bounce;
+		}
+		public void setBounce(Boolean input){
+			bounce = input;
+		}
+		public void updateBounce(){
+			if(getBounce()){
+				move(getlastposx(), getlastposy());
+			}
+			else{
+				setlastposx(getX());
+				setlastposy(getY());
+			}
+			setBounce(false);
+		}
+
+		public void setlastposx(double input){
+			lastposx = input;
+		}
+
+		public void setlastposy(double input){
+			lastposy = input;
+		}
+
+
+		public double getlastposx(){
+			return x;
+		}
+
+		public double getlastposy(){
+			return y;
+		}
+
 		public void screenWrap(double leftEdge, double rightEdge, double topEdge, double bottomEdge)
 		{
 			if(x > rightEdge)
@@ -1376,6 +1448,9 @@ public class Asteroids
 		private Vector<Double> triangles;
 		private double comX;
 		private double comY;
+		private Boolean bounce;
+		private double lastposx;
+		private double lastposy;
 
 	}
 
@@ -1392,7 +1467,7 @@ public class Asteroids
 	{
 		setup();
 		appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		appFrame.setSize(976, 790);
+		appFrame.setSize(735, 755);
 
 		JPanel myPanel = new JPanel();
 
@@ -1402,6 +1477,7 @@ public class Asteroids
 //		levelMenu.addActionListener(new GameLevel());
 //		myPanel.add(levelMenu);
 
+
 		JButton newGameButton = new JButton("New Game");
 		newGameButton.addActionListener(new StartGame());
 		myPanel.add(newGameButton);
@@ -1409,6 +1485,9 @@ public class Asteroids
 		JButton quitButton = new JButton("Quit Game");
 		quitButton.addActionListener(new QuitGame());
 		myPanel.add(quitButton);
+
+
+
 
 		bindKey(myPanel, "UP");
 		bindKey(myPanel, "DOWN");
@@ -1507,7 +1586,6 @@ public class Asteroids
 	private static JFrame appFrame;
 
 	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-
 
 
 
