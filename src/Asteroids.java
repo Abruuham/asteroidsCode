@@ -84,36 +84,6 @@ public class Asteroids
 
 	}
 
-
-	public static void drawBorders()
-	{
-		Graphics g = appFrame.getGraphics();
-		Graphics2D g2D = (Graphics2D) g;
-
-		g2D.drawRect(48, 312, 112, 135);
-		g2D.drawRect(210, 312, 180, 150);
-		g2D.drawRect(437, 312, 250, 97);
-		g2D.drawRect(93, 495, 100, 107);
-		g2D.drawRect(317, 656, 75, 90);
-		g2D.drawRect(490, 507, 230, 190);
-		g2D.drawRect(317, 560, 128, 49);
-		g2D.drawRect(400, 709, 85, 30);
-		g2D.drawRect(210, 742, 100, 30);
-		g2D.drawRect(234, 646, 36, 50);
-		g2D.drawRect(252, 470, 36, 90);
-		g2D.drawRect(0, 409, 44, 328);
-		g2D.drawRect(692, 400, 55, 100);
-		g2D.drawRect(370, 455, 276, 6);
-		g2D.drawRect(336, 508, 180, 6);
-		g2D.drawRect(38, 650, 89, 128);
-		g2D.drawLine(152, 304, 297, 161);
-		g2D.drawLine(300, 161, 451, 307);
-		g2D.drawLine(210, 317, 300, 215);
-		g2D.drawLine(300, 215, 387, 310);
-		g2D.drawLine(123, 649, 205, 739);
-		g2D.drawLine(123, 590, 234, 694);
-	}
-
 	private static class Animate implements Runnable
 	{
 		public void run()
@@ -126,7 +96,6 @@ public class Asteroids
 				enemyDraw();//
 				playerBulletsDraw();
 				playerDraw();
-				drawBorders();
 
 				try
 				{
