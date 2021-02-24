@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.Vector;
 import java.util.Random;
 import java.time.LocalTime;
@@ -84,7 +85,34 @@ public class Asteroids
 	}
 
 
+	public static void drawBorders()
+	{
+		Graphics g = appFrame.getGraphics();
+		Graphics2D g2D = (Graphics2D) g;
 
+		g2D.drawRect(48, 312, 112, 135);
+		g2D.drawRect(210, 312, 180, 150);
+		g2D.drawRect(437, 312, 250, 97);
+		g2D.drawRect(93, 495, 100, 107);
+		g2D.drawRect(317, 656, 75, 90);
+		g2D.drawRect(490, 507, 230, 190);
+		g2D.drawRect(317, 560, 128, 49);
+		g2D.drawRect(400, 709, 85, 30);
+		g2D.drawRect(210, 742, 100, 30);
+		g2D.drawRect(234, 646, 36, 50);
+		g2D.drawRect(252, 470, 36, 90);
+		g2D.drawRect(0, 409, 44, 328);
+		g2D.drawRect(692, 400, 55, 100);
+		g2D.drawRect(370, 455, 276, 6);
+		g2D.drawRect(336, 508, 180, 6);
+		g2D.drawRect(38, 650, 89, 128);
+		g2D.drawLine(152, 304, 297, 161);
+		g2D.drawLine(300, 161, 451, 307);
+		g2D.drawLine(210, 317, 300, 215);
+		g2D.drawLine(300, 215, 387, 310);
+		g2D.drawLine(123, 649, 205, 739);
+		g2D.drawLine(123, 590, 234, 694);
+	}
 
 	private static class Animate implements Runnable
 	{
@@ -98,6 +126,8 @@ public class Asteroids
 				enemyDraw();//
 				playerBulletsDraw();
 				playerDraw();
+				drawBorders();
+
 				try
 				{
 					Thread.sleep(32);
@@ -133,6 +163,7 @@ public class Asteroids
 		{
 			velocitystep = 0.01;
 			rotatestep = 0.01;
+
 		}
 
 		public void run()
@@ -289,6 +320,40 @@ public class Asteroids
 				{
 
 				}
+				if(enemy.getX() <= 2 || enemy.getX() >= 680 || enemy.getY() <= 45 || enemy.getY() >= 700) {
+					p2velocity = 0;
+					if(wPressed == true)
+					{
+						p2velocity = p2velocity + velocitystep;
+					}
+					if(sPressed == true)
+					{
+						p2velocity = p2velocity - velocitystep;
+					}
+					if(aPressed == true)
+					{
+						if(p2velocity < 0)
+						{
+							enemy.rotate(-p2rotateStep);
+						}
+						else
+						{
+							enemy.rotate(p2rotateStep);
+						}
+					}
+					if(dPressed == true)
+					{
+						if(p2velocity < 0)
+						{
+							enemy.rotate(p2rotateStep);
+						}
+						else
+						{
+							enemy.rotate(-p2rotateStep);
+						}
+					}
+				}
+
 				if(wPressed == true)
 				{
 					p2velocity = p2velocity + velocitystep;
@@ -318,9 +383,6 @@ public class Asteroids
 					{
 						enemy.rotate(-p2rotateStep);
 					}
-
-
-
 				}
 				if(enemyFire == true)
 				{
@@ -349,7 +411,7 @@ public class Asteroids
 		}
 		private double velocitystep;
 		private double p2rotateStep;
-		private double p2velocity;
+
 //		public EnemyShipMover()
 //		{
 //			velocity = 1.0;
@@ -456,6 +518,9 @@ public class Asteroids
 						for(int i = 0; i < walls.size(); i++){
 							if(collisionOccurs(walls.elementAt(i), p1) == true){
 								p1velocity = 0;
+							}
+							if(collisionOccurs(walls.elementAt(i), enemy) == true){
+								p2velocity = 0;
 							}
 						}
 
@@ -612,6 +677,13 @@ public class Asteroids
 		Graphics g = appFrame.getGraphics();
 		Graphics2D g2D = (Graphics2D)g;
 		g2D.drawImage(background, XOFFSET, YOFFSET, null);
+		g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		DecimalFormat df = new DecimalFormat("#.##");
+
+		g2D.drawString("M.P.H: " + df.format(Math.abs(p1velocity*10)),175,100);
+		g2D.drawString("M.P.H: " + df.format(Math.abs(p2velocity*10)),545,100);
+
 	}
 
 	private static void enemyBulletsDraw()
@@ -804,6 +876,7 @@ public class Asteroids
 		public void actionPerformed(ActionEvent e)
 		{
 			endgame = true;
+			didQuit = true;
 		}
 	}
 
@@ -811,6 +884,7 @@ public class Asteroids
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			didQuit = false;
 			endgame = true;
 			enemyAlive = true;
 			upPressed = false;
@@ -825,7 +899,7 @@ public class Asteroids
 			enemyFire = false;
 			p1 = new ImageObject(p1originalX, p1originalY, p1Width, p1Height, 0.0);
 			p1velocity = 0.0;
-			p2Velocity = 0.0;
+			p2velocity = 0.0;
 			generateEnemy();
 			flames = new ImageObject(p1originalX + p1Width / 2.0, p1originalY + p1Height, flameWidth, flameWidth, 0.0);
 			flameCount = 1;
@@ -847,6 +921,7 @@ public class Asteroids
 			} catch (UnsupportedAudioFileException unsupportedAudioFileException) {
 				unsupportedAudioFileException.printStackTrace();
 			}
+
 			playerBullets = new Vector<ImageObject>();
 			playerBulletsTimes = new Vector<Long>();
 			enemyBullets = new Vector<ImageObject>();
@@ -879,8 +954,10 @@ public class Asteroids
 		Clip clip = AudioSystem.getClip();
 		clip.open(audioIn);
 		FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-		volume.setValue(-1 * 25);
+		volume.setValue(-1 * 40);
 		clip.start();
+
+
 
 	}
 
@@ -1153,39 +1230,6 @@ public class Asteroids
 			y = yinput;
 		}
 
-		public Boolean getBounce(){
-			return bounce;
-		}
-		public void setBounce(Boolean input){
-			bounce = input;
-		}
-		public void updateBounce(){
-			if(getBounce()){
-				move(getlastposx(), getlastposy());
-			}
-			else{
-				setlastposx(getX());
-				setlastposy(getY());
-			}
-			setBounce(false);
-		}
-
-		public void setlastposx(double input){
-			lastposx = input;
-		}
-
-		public void setlastposy(double input){
-			lastposy = input;
-		}
-
-
-		public double getlastposx(){
-			return x;
-		}
-
-		public double getlastposy(){
-			return y;
-		}
 
 		public void screenWrap(double leftEdge, double rightEdge, double topEdge, double bottomEdge)
 		{
@@ -1325,7 +1369,7 @@ public class Asteroids
 	private static double p1originalX;
 	private static double p1originalY;
 	private static double p1velocity;
-	private static double p2Velocity;
+	private static double p2velocity;
 	private static double p2rotateStep;
 
 	private static ImageObject enemy;
@@ -1369,6 +1413,7 @@ public class Asteroids
 	private static Long explosionLifetime;
 	private static BufferedImage exp1;
 	private static BufferedImage exp2;
+	private static Boolean didQuit;
 
 	private static int expcount;
 
